@@ -1,7 +1,10 @@
 const fs = require('fs');
 const http = require('http');
 const url = require("url");
-
+const invalidUrl=(res) =>{
+    res.write(`cannot find filename, invalid URL, please try again`); //write a response to the client
+    res.end(); //end the response
+}
 http.createServer((req, res) => {
     
     const reqUrl = url.parse(req.url).pathname;
@@ -26,6 +29,9 @@ http.createServer((req, res) => {
                     res.end(); //end the response
                 }); 
             }
+        }
+        else{
+            invalidUrl(res);
         }
     } else if (reqUrl.startsWith("/write")){
         const filename = search_params.filename;
@@ -61,6 +67,9 @@ http.createServer((req, res) => {
                 }
             }
         }
+        else{
+            invalidUrl(res);
+        }
         
     } else if (reqUrl === '/read'){
         const filename = search_params.filename;
@@ -81,6 +90,8 @@ http.createServer((req, res) => {
 
                 });
             }
+        } else {
+            invalidUrl(res);
         }
         
     } else if (reqUrl === '/delete'){
@@ -103,7 +114,10 @@ http.createServer((req, res) => {
                     // console.log("delete file data.txt");
                 });
             }
+        } else {
+            invalidUrl(res);
         }
+        
     }
     else
     {
